@@ -231,7 +231,7 @@
     </div>
 
     <div class="container">
-        <!-- Thanh trạng thái phiên đăng nhập (Đáp ứng tiêu chí EP-01) -->
+    
         <div id="statusBar" class="session-status-bar">
             <span id="statusText">⏳ Phiên đăng nhập còn hiệu lực: <strong>30s</strong></span>
             <button class="btn-renew" onclick="giaHanPhien()">Gia hạn phiên</button>
@@ -261,19 +261,17 @@
     </div>
 
 <script>
-    // Kiểm tra bảo mật: Nếu chưa đăng nhập mà gõ trực tiếp URL index.html thì đá về login
+
     if (localStorage.getItem("isLoggedIn") !== "true") {
         window.location.href = "login.html";
     }
 
-    // Thiết lập thời gian phiên (ví dụ 30 giây để kiểm thử nhanh)
     let sessionTime = 30;
     const statusBar = document.getElementById("statusBar");
     const statusText = document.getElementById("statusText");
     const noiDungNhap = document.getElementById("noiDungNhap");
     const draftStatus = document.getElementById("draftStatus");
 
-    // 1. Phục hồi dữ liệu đang nhập dở khi vào lại trang
     window.onload = function() {
         const savedDraft = localStorage.getItem("diem_danh_draft");
         if (savedDraft) {
@@ -281,7 +279,6 @@
         }
     };
 
-    // 2. Chống mất dữ liệu: Tự động lưu bản nháp khi người dùng gõ phím
     noiDungNhap.addEventListener("input", function() {
         localStorage.setItem("diem_danh_draft", noiDungNhap.value);
         draftStatus.innerText = "💾 Đang lưu tự động...";
@@ -289,8 +286,6 @@
             draftStatus.innerText = "💾 Dữ liệu đã được lưu bản nháp an toàn";
         }, 500);
     });
-
-    // 3. Đếm ngược thời gian phiên và xử lý hết hạn (Timeout)
     const sessionTimer = setInterval(() => {
         sessionTime--;
         
@@ -311,21 +306,18 @@
         }
     }, 1000);
 
-    // 4. Gia hạn phiên khi có hoạt động hoặc bấm nút
     function giaHanPhien() {
-        sessionTime = 30; // Reset lại thời gian đếm ngược
+        sessionTime = 30; 
         statusBar.classList.remove("danger");
         statusText.innerHTML = "✅ Phiên đã được gia hạn thành công!";
         setTimeout(() => {
             statusText.innerHTML = `⏳ Phiên đăng nhập còn hiệu lực: <strong>${sessionTime}s</strong>`;
         }, 2000);
     }
-
-    // 5. Đăng xuất an toàn (Hủy phiên lập tức ở phía client/server)
     function dangXuatAnToan() {
         if (confirm("Bạn có chắc chắn muốn đăng xuất an toàn không?")) {
             localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("diem_danh_draft"); // Xóa dữ liệu tạm khi đăng xuất hẳn trên máy chung
+            localStorage.removeItem("diem_danh_draft"); 
             window.location.href = "login.html";
         }
     }
