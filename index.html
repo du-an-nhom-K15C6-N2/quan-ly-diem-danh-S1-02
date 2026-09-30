@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Điểm Danh - EP-01</title>
+    <style>
+        :root {
+            --bg: #f4f7ff;
+            --panel: #ffffff;
+            --panel-soft: #eef4ff;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: #dbeafe;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #dfe7f5;
+            --warning-bg: #fff7d6;
+            --warning-text: #92400e;
+            --warning-border: #fcd34d;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --danger-border: #fca5a5;
+            --success: #10b981;
+            --shadow: rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fbff 0%, #edf5ff 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Header */
+        .navbar {
+            background: linear-gradient(90deg, #0f172a 0%, #111827 100%);
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-toggle-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .brand-title h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .user-role-chip {
+            display: inline-block;
+            margin-top: 2px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(59, 130, 246, 0.25);
+            color: #93c5fd;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+            transition: transform 0.2s ease, filter 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        /* Desktop Navigation Bar */
+        .desktop-nav {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            padding: 0 24px;
+        }
+
+        .nav-wrapper {
+            max-width: 1080px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            gap: 6px;
+            padding: 6px 0;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .nav-item .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item .nav-link:hover {
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .nav-item.active .nav-link {
+            color: #ffffff;
+            background: var(--primary);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+        }
+
+        /* Mobile Drawer */
+        .drawer-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .drawer-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: min(85vw, 320px);
+            background: #ffffff;
+            z-index: 210;
+            box-shadow: 4px 0 24px rgba(15, 23, 42, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            padding: 20px 18px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .drawer-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        .drawer-user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .drawer-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .drawer-role-chip {
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            padding: 2px 8px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .drawer-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drawer-section-title {
+            padding: 16px 18px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .drawer-list {
+            list-style: none;
+            padding: 8px 12px;
+            margin: 0;
+            flex: 1;
+        }
+
+        .drawer-item {
+            margin-bottom: 6px;
+        }
+
+        .drawer-item .drawer-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 14px;
+            color: #334155;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            min-height: 48px;
+        }
+
+        .drawer-item .drawer-link:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .drawer-item.active .drawer-link {
+            background: var(--primary);
+            color: white;
+        }
+
+        .drawer-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .drawer-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-drawer-logout {
+            width: 100%;
+            background: #fee2e2;
+            color: var(--danger-text);
+            border: 1px solid #fca5a5;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-drawer-logout:hover {
+            background: #fecaca;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 860px;
+            margin: 32px auto;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 22px;
+            box-shadow: 0 18px 40px var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Banner phiên đăng nhập */
+        .session-status-bar {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--warning-border);
+        }
+
+        .session-status-bar.danger {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            border-bottom-color: var(--danger-border);
+        }
+
+        .btn-renew {
+            background: white;
+            border: 1px solid var(--warning-border);
+            padding: 7px 12px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--warning-text);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-renew:hover {
+            background: #fffdf7;
+            transform: translateY(-1px);
+        }
+
+        /* Content Panel */
+        .content {
+            padding: 32px 30px 28px;
+        }
+
+        .panel-section {
+            display: none;
+        }
+
+        .panel-section.active {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text);
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #475569;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            background: #fbfdff;
+            color: var(--text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: rgba(37, 99, 235, 0.7);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-top: 28px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .draft-notice {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
+            transition: transform 0.2s ease, filter 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.03);
+        }
+
+        /* Generic table for management panels */
+        .data-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .data-table-wrapper {
+            overflow-x: auto;
+            margin-top: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+            background: white;
+        }
+
+        .data-table th {
+            background: #f1f5f9;
+            color: #334155;
+            padding: 10px 14px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-tag.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-tag.warning {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .status-tag.info {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .msg-box {
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .msg-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .msg-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* 360px & Mobile Viewport Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 14px;
+            }
+
+            .menu-toggle-btn {
+                display: flex;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .brand-title h2 {
+                font-size: 15px;
+            }
+
+            .user-panel {
+                gap: 8px;
+            }
+
+            .user-badge {
+                padding: 4px 8px;
+                gap: 6px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+
+            .user-name {
+                font-size: 12px;
+                max-width: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .user-role-chip {
+                font-size: 10px;
+                padding: 1px 6px;
+            }
+
+            .btn-logout {
+                padding: 6px 10px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+
+            .container {
+                margin: 16px 10px;
+                border-radius: 16px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+
+            .session-status-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .session-status-bar .btn-renew {
+                width: 100%;
+                text-align: center;
+                padding: 8px;
+            }
+
+            .action-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .btn-submit {
+                width: 100%;
+                text-align: center;
+            }
+
+            .title {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .navbar {
+                padding: 8px 10px;
+            }
+
+            .brand-title h2 {
+                font-size: 14px;
+            }
+
+            .user-name {
+                max-width: 75px;
+            }
+
+            .user-role-chip {
+                display: none;
+            }
+
+            .content {
+                padding: 16px 12px;
+            }
+
+            .container {
+                margin: 12px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="nav-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleMenu()" aria-label="Mở menu điều hướng">
+                ☰
+            </button>
+            <div class="brand-title">
+                <h2>🎓 Quản Lý Điểm Danh</h2>
+            </div>
+        </div>
+        <div class="user-panel">
+            <div class="user-badge" id="userBadge">
+                <div class="user-avatar" id="userAvatar">SV</div>
+                <div class="user-details">
+                    <span class="user-name" id="userNameDisplay">Sinh viên</span>
+                    <span class="user-role-chip" id="userRoleDisplay">Sinh viên</span>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="dangXuatAnToan()">Đăng xuất</button>
+        </div>
+    </header>
+
+    <!-- Desktop Navigation Bar -->
+    <nav class="desktop-nav" id="desktopNav" aria-label="Menu điều hướng chính">
+        <div class="nav-wrapper">
+            <ul class="nav-list" id="desktopMenuList">
+                <!-- Danh sách menu sẽ được render tự động theo quyền -->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer Overlay & Sidebar -->
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMenu()"></div>
+    <aside class="mobile-drawer" id="mobileDrawer" aria-label="Menu điều hướng di động">
+        <div class="drawer-header">
+            <div class="drawer-user-card">
+                <div class="drawer-avatar" id="drawerAvatar">SV</div>
+                <div class="drawer-user-meta">
+                    <strong class="drawer-name" id="drawerUserName">Sinh viên</strong>
+                    <span class="drawer-role-chip" id="drawerUserRole">Sinh viên</span>
+                </div>
+            </div>
+            <button class="drawer-close" onclick="closeMenu()" aria-label="Đóng menu">✕</button>
+        </div>
+        <div class="drawer-section-title">DANH MỤC CHỨC NĂNG</div>
+        <ul class="drawer-list" id="mobileMenuList">
+            <!-- Danh sách menu mobile sẽ được render tự động theo quyền -->
+        </ul>
+        <div class="drawer-footer">
+            <button class="btn-drawer-logout" onclick="dangXuatAnToan()">🚪 Đăng xuất an toàn</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Thanh trạng thái phiên đăng nhập (Đáp ứng tiêu chí EP-01) -->
+        <div id="statusBar" class="session-status-bar">
+            <span id="statusText">⏳ Phiên đăng nhập còn hiệu lực: <strong>30s</strong></span>
+            <button class="btn-renew" onclick="giaHanPhien()">Gia hạn phiên</button>
+        </div>
+
+        <div class="content">
+
+            <!-- Panel 1: Điểm danh lớp học (Dành cho Sinh viên) -->
+            <section id="panel_diem_danh" class="panel-section active">
+                <div class="title">Biểu Mẫu Điểm Danh Lớp Học</div>
+                <p class="subtitle">Ghi nhận tham gia buổi học và bảo vệ dữ liệu tự động</p>
+
+                <div class="form-group">
+                    <label for="monHocSelect">Môn học</label>
+                    <select id="monHocSelect">
+                        <option>Phân tích thiết kế hệ thống K23</option>
+                        <option>Lập trình hướng đối tượng</option>
+                        <option>Cơ sở dữ liệu nâng cao</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="noiDungNhap">Nội dung ghi chú / Dữ liệu nhập dở (Được bảo vệ tự động):</label>
+                    <textarea id="noiDungNhap" placeholder="Nhập nội dung điểm danh của bạn tại đây..."></textarea>
+                </div>
+
+                <div class="action-row">
+                    <span id="draftStatus" class="draft-notice">💾 Dữ liệu đã được lưu bản nháp an toàn</span>
+                    <button class="btn-submit" onclick="diemDanhThanhCong()">Gửi Điểm Danh</button>
+                </div>
+            </section>
+
+            <!-- Panel 2: Lịch sử điểm danh (Dành cho Sinh viên) -->
+            <section id="panel_lich_su" class="panel-section">
+                <div class="title">Lịch Sử Điểm Danh Cá Nhân</div>
+                <p class="subtitle">Theo dõi quá trình chuyên cần của bạn qua các buổi học</p>
+
+                <div class="data-card">
+                    <strong>Tổng quan chuyên cần:</strong> Đã tham gia 18/20 buổi (Tỉ lệ 90%)
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ngày học</th>
+                                <th>Môn học</th>
+                                <th>Thời gian</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>30/09/2026</td>
+                                <td>Phân tích thiết kế hệ thống</td>
+                                <td>07:30</td>
+                                <td><span class="status-tag ok">Có mặt</span></td>
+                            </tr>
+                            <tr>
+                                <td>28/09/2026</td>
+                                <td>Lập trình hướng đối tượng</td>
+                                <td>09:15</td>
+                                <td><span class="status-tag ok">Có mặt</span></td>
+                            </tr>
+                            <tr>
+                                <td>25/09/2026</td>
+                                <td>Cơ sở dữ liệu nâng cao</td>
+                                <td>13:30</td>
+                                <td><span class="status-tag warning">Đi muộn</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Panel 3: Quản lý điểm danh lớp (Dành cho Giảng viên) -->
+            <section id="panel_quan_ly_diem_danh" class="panel-section">
+                <div class="title">Quản Lý Điểm Danh Lớp Học</div>
+                <p class="subtitle">Theo dõi và xác nhận điểm danh cho sinh viên lớp học phần</p>
+
+                <div class="data-card">
+                    <strong>Lớp:</strong> K23-HTTT01 | <strong>Môn:</strong> Phân tích thiết kế hệ thống | <strong>Sĩ số:</strong> 45/45
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã SV</th>
+                                <th>Họ và tên</th>
+                                <th>Thời gian gửi</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sv_k2301</td>
+                                <td>Nguyễn Văn An</td>
+                                <td>07:32</td>
+                                <td><span class="status-tag ok">Hợp lệ</span></td>
+                                <td><button class="status-tag info" style="border:none; cursor:pointer;" onclick="alert('Đã xác nhận sinh viên Nguyễn Văn An!')">Duyệt</button></td>
+                            </tr>
+                            <tr>
+                                <td>sv_k2302</td>
+                                <td>Trần Thị Bình</td>
+                                <td>07:35</td>
+                                <td><span class="status-tag ok">Hợp lệ</span></td>
+                                <td><button class="status-tag info" style="border:none; cursor:pointer;" onclick="alert('Đã xác nhận sinh viên Trần Thị Bình!')">Duyệt</button></td>
+                            </tr>
+                            <tr>
+                                <td>sv_k2303</td>
+                                <td>Lê Hoàng Cường</td>
+                                <td>--:--</td>
+                                <td><span class="status-tag warning">Chưa điểm danh</span></td>
+                                <td><button class="status-tag warning" style="border:none; cursor:pointer;" onclick="alert('Đã đánh dấu vắng!')">Đánh vắng</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Panel 4: Danh sách lớp học (Dành cho Giảng viên) -->
+            <section id="panel_danh_sach_lop" class="panel-section">
+                <div class="title">Danh Sách Lớp Học Giảng Dạy</div>
+                <p class="subtitle">Các lớp học phần được phân công trong học kỳ</p>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã lớp</th>
+                                <th>Tên môn học</th>
+                                <th>Phòng học</th>
+                                <th>Lịch dạy</th>
+                                <th>Sĩ số</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PTTK_K23_01</td>
+                                <td>Phân tích thiết kế hệ thống</td>
+                                <td>P.302-A1</td>
+                                <td>Thứ 2, Tiết 1-3</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>OOP_K23_02</td>
+                                <td>Lập trình hướng đối tượng</td>
+                                <td>Lab.201-B</td>
+                                <td>Thứ 4, Tiết 4-6</td>
+                                <td>42</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Panel 5: Báo cáo chuyên cần (Dành cho Giảng viên) -->
+            <section id="panel_bao_cao_chuyen_can" class="panel-section">
+                <div class="title">Báo Cáo Chuyên Cần Lớp Học</div>
+                <p class="subtitle">Thống kê tỉ lệ đi học và danh sách sinh viên cảnh báo vắng</p>
+
+                <div class="data-card">
+                    <div style="margin-bottom: 8px;">📊 <strong>Tỉ lệ đi học trung bình toàn khóa:</strong> 94.2%</div>
+                    <div>⚠️ <strong>Sinh viên có nguy cơ cấm thi (>20% vắng):</strong> 1 sinh viên</div>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã SV</th>
+                                <th>Họ tên</th>
+                                <th>Số buổi vắng</th>
+                                <th>Tỉ lệ vắng</th>
+                                <th>Tình trạng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sv_k2303</td>
+                                <td>Lê Hoàng Cường</td>
+                                <td>4 buổi</td>
+                                <td>22%</td>
+                                <td><span class="status-tag warning">Cảnh báo vắng</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Panel 6: Quản lý người dùng (Dành cho Quản trị viên) -->
+            <section id="panel_quan_ly_nguoi_dung" class="panel-section">
+                <div class="title">Quản Lý Người Dùng Hệ Thống</div>
+                <p class="subtitle">Phân quyền vai trò và quản lý tài khoản người dùng</p>
+
+                <div class="data-card">
+                    <strong>Hệ thống phân quyền:</strong> Quản trị viên (Admin), Giảng viên (Lecturer), Sinh viên (Student)
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tài khoản</th>
+                                <th>Họ và tên</th>
+                                <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>admin</td>
+                                <td>Ngô Trung Hiếu</td>
+                                <td><span class="status-tag info">Quản trị viên</span></td>
+                                <td><span class="status-tag ok">Hoạt động</span></td>
+                            </tr>
+                            <tr>
+                                <td>gv_nguyenvana</td>
+                                <td>ThS. Nguyễn Văn Anh</td>
+                                <td><span class="status-tag info">Giảng viên</span></td>
+                                <td><span class="status-tag ok">Hoạt động</span></td>
+                            </tr>
+                            <tr>
+                                <td>sv_k2301</td>
+                                <td>Nguyễn Văn An</td>
+                                <td><span class="status-tag info">Sinh viên</span></td>
+                                <td><span class="status-tag ok">Hoạt động</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Panel 7: Quản lý môn & lớp (Dành cho Quản trị viên) -->
+            <section id="panel_quan_ly_lop_hoc" class="panel-section">
+                <div class="title">Quản Lý Danh Mục Môn Học & Lớp</div>
+                <p class="subtitle">Thiết lập học phần và phân công giảng viên</p>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã môn</th>
+                                <th>Tên môn</th>
+                                <th>Số tín chỉ</th>
+                                <th>Khoa quản lý</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INT1310</td>
+                                <td>Phân tích thiết kế hệ thống</td>
+                                <td>3</td>
+                                <td>Công nghệ phần mềm</td>
+                            </tr>
+                            <tr>
+                                <td>INT1306</td>
+                                <td>Lập trình hướng đối tượng</td>
+                                <td>3</td>
+                                <td>Khoa học máy tính</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Panel 8: Báo cáo tổng hợp (Dành cho Quản trị viên) -->
+            <section id="panel_bao_cao_tong_hop" class="panel-section">
+                <div class="title">Báo Cáo Tổng Hợp Điểm Danh Toàn Trường</div>
+                <p class="subtitle">Chỉ số hoạt động chuyên cần và sử dụng hệ thống</p>
+
+                <div class="data-card">
+                    <p style="margin-bottom: 6px;">📈 <strong>Tổng số lượt điểm danh thành công hôm nay:</strong> 1,280 lượt</p>
+                    <p style="margin-bottom: 6px;">💻 <strong>Số phiên đăng nhập an toàn đang hoạt động:</strong> 85 phiên</p>
+                    <p>🛡️ <strong>Tỉ lệ phiên được bảo vệ thành công:</strong> 100%</p>
+                </div>
+            </section>
+
+            <!-- Panel 9: Cấu hình hệ thống (Dành cho Quản trị viên) -->
+            <section id="panel_cau_hinh_he_thong" class="panel-section">
+                <div class="title">Cấu Hình Tham Số Hệ Thống</div>
+                <p class="subtitle">Thiết lập thời gian phiên đăng nhập và chính sách bảo mật</p>
+
+                <div class="form-group">
+                    <label>Thời gian hiệu lực phiên đăng nhập (giây):</label>
+                    <input type="number" value="30" readonly style="background:#f1f5f9;">
+                    <small style="color:var(--muted); display:block; margin-top:4px;">Thời gian phiên thử nghiệm demo (30s) theo chuẩn tiêu chí nghiệm thu EP-01.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Thời gian cảnh báo trước khi hết hạn (giây):</label>
+                    <input type="number" value="10" readonly style="background:#f1f5f9;">
+                </div>
+            </section>
+
+            <!-- Panel 10: Đổi mật khẩu (Dành cho mọi vai trò có quyền doi_mat_khau) -->
+            <section id="panel_doi_mat_khau" class="panel-section">
+                <div class="title">Đổi Mật Khẩu Tài Khoản</div>
+                <p class="subtitle">Bảo vệ tài khoản bằng mật khẩu mạnh</p>
+
+                <form id="panelPasswordForm" onsubmit="xuLyDoiMatKhau(event)">
+                    <div class="form-group">
+                        <label for="pCurrentPassword">Mật khẩu hiện tại:</label>
+                        <input type="password" id="pCurrentPassword" required placeholder="Nhập mật khẩu hiện tại">
+                    </div>
+                    <div class="form-group">
+                        <label for="pNewPassword">Mật khẩu mới:</label>
+                        <input type="password" id="pNewPassword" required minlength="8" placeholder="Tối thiểu 8 ký tự, có chữ và số">
+                    </div>
+                    <div class="form-group">
+                        <label for="pConfirmPassword">Xác nhận mật khẩu mới:</label>
+                        <input type="password" id="pConfirmPassword" required placeholder="Nhập lại mật khẩu mới">
+                    </div>
+                    <button type="submit" class="btn-submit">Xác nhận đổi mật khẩu</button>
+                </form>
+
+                <div id="pPasswordMessage" class="msg-box"></div>
+            </section>
+
+        </div>
+    </main>
+
+<script>
+    // Định nghĩa toàn bộ danh mục menu và mã quyền tương ứng
+    const ALL_MENU_ITEMS = [
+        {
+            id: "menu_diem_danh",
+            permission: "diem_danh",
+            title: "Điểm danh lớp học",
+            icon: "✍️",
+            targetPanel: "panel_diem_danh"
+        },
+        {
+            id: "menu_lich_su",
+            permission: "lich_su_diem_danh",
+            title: "Lịch sử điểm danh",
+            icon: "📋",
+            targetPanel: "panel_lich_su"
+        },
+        {
+            id: "menu_quan_ly_diem_danh",
+            permission: "quan_ly_diem_danh",
+            title: "Quản lý điểm danh",
+            icon: "👨‍🏫",
+            targetPanel: "panel_quan_ly_diem_danh"
+        },
+        {
+            id: "menu_danh_sach_lop",
+            permission: "danh_sach_lop",
+            title: "Danh sách lớp học",
+            icon: "📚",
+            targetPanel: "panel_danh_sach_lop"
+        },
+        {
+            id: "menu_bao_cao_chuyen_can",
+            permission: "bao_cao_chuyen_can",
+            title: "Báo cáo chuyên cần",
+            icon: "📊",
+            targetPanel: "panel_bao_cao_chuyen_can"
+        },
+        {
+            id: "menu_quan_ly_nguoi_dung",
+            permission: "quan_ly_nguoi_dung",
+            title: "Quản lý người dùng",
+            icon: "👥",
+            targetPanel: "panel_quan_ly_nguoi_dung"
+        },
+        {
+            id: "menu_quan_ly_lop_hoc",
+            permission: "quan_ly_lop_hoc",
+            title: "Quản lý môn & lớp",
+            icon: "🏫",
+            targetPanel: "panel_quan_ly_lop_hoc"
+        },
+        {
+            id: "menu_bao_cao_tong_hop",
+            permission: "bao_cao_tong_hop",
+            title: "Báo cáo tổng hợp",
+            icon: "📈",
+            targetPanel: "panel_bao_cao_tong_hop"
+        },
+        {
+            id: "menu_cau_hinh_he_thong",
+            permission: "cau_hinh_he_thong",
+            title: "Cấu hình hệ thống",
+            icon: "⚙️",
+            targetPanel: "panel_cau_hinh_he_thong"
+        },
+        {
+            id: "menu_doi_mat_khau",
+            permission: "doi_mat_khau",
+            title: "Đổi mật khẩu",
+            icon: "🔑",
+            targetPanel: "panel_doi_mat_khau"
+        }
+    ];
+
+    // Quản lý phiên đăng nhập
+    const SESSION_DURATION_MS = 30 * 1000;
+
+    function getRemainingMs() {
+        const expiresAt = Number(localStorage.getItem("sessionExpiresAt") || 0);
+        return Math.max(0, expiresAt - Date.now());
+    }
+
+    function formatRemainingTime(ms) {
+        const totalSeconds = Math.ceil(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function setSessionExpiry() {
+        localStorage.setItem("sessionExpiresAt", String(Date.now() + SESSION_DURATION_MS));
+    }
+
+    function expireSession() {
+        localStorage.setItem("logout_reason", "timeout");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("sessionExpiresAt");
+        localStorage.removeItem("currentUser");
+        alert("Phiên làm việc đã hết hạn. Hệ thống đưa bạn về trang đăng nhập (Dữ liệu đang nhập dở của bạn vẫn được giữ nguyên).");
+        window.location.href = "login.html";
+    }
+
+    // Kiểm tra đăng nhập
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+
+    // Lấy thông tin người dùng từ localStorage
+    function getCurrentUser() {
+        try {
+            const raw = localStorage.getItem("currentUser");
+            if (raw) return JSON.parse(raw);
+        } catch (e) {
+            console.error(e);
+        }
+        return {
+            username: "sv_k2301",
+            fullName: "Nguyễn Văn An",
+            role: "student",
+            roleName: "Sinh viên",
+            permissions: ["diem_danh", "lich_su_diem_danh", "doi_mat_khau"]
+        };
+    }
+
+    const currentUser = getCurrentUser();
+
+    // Hiển thị thông tin người dùng và vai trò
+    function capNhatThongTinNguoiDung(user) {
+        const nameDisplay = document.getElementById("userNameDisplay");
+        const roleDisplay = document.getElementById("userRoleDisplay");
+        const avatarDisplay = document.getElementById("userAvatar");
+
+        const drawerName = document.getElementById("drawerUserName");
+        const drawerRole = document.getElementById("drawerUserRole");
+        const drawerAvatar = document.getElementById("drawerAvatar");
+
+        const name = user.fullName || user.username || "Người dùng";
+        const roleName = user.roleName || "Sinh viên";
+
+        let initials = "ND";
+        if (user.role === "admin") initials = "AD";
+        else if (user.role === "lecturer") initials = "GV";
+        else if (user.role === "student") initials = "SV";
+
+        if (nameDisplay) nameDisplay.textContent = name;
+        if (roleDisplay) roleDisplay.textContent = roleName;
+        if (avatarDisplay) avatarDisplay.textContent = initials;
+
+        if (drawerName) drawerName.textContent = name;
+        if (drawerRole) drawerRole.textContent = roleName;
+        if (drawerAvatar) drawerAvatar.textContent = initials;
+    }
+
+    // Lọc menu điều hướng theo quyền và render
+    function renderMenuTheoQuyen(user) {
+        const userPermissions = Array.isArray(user.permissions) ? user.permissions : [];
+
+        // Lọc: Chỉ lấy các mục menu mà user có quyền tương ứng
+        const accessibleItems = ALL_MENU_ITEMS.filter(item => 
+            userPermissions.includes(item.permission)
+        );
+
+        const desktopList = document.getElementById("desktopMenuList");
+        const mobileList = document.getElementById("mobileMenuList");
+
+        desktopList.innerHTML = "";
+        mobileList.innerHTML = "";
+
+        accessibleItems.forEach((item, index) => {
+            const isActive = index === 0;
+
+            // Render Desktop Nav Item
+            const desktopLi = document.createElement("li");
+            desktopLi.className = "nav-item" + (isActive ? " active" : "");
+            desktopLi.id = "desktop_" + item.id;
+            desktopLi.innerHTML = `
+                <a href="javascript:void(0)" class="nav-link" onclick="chuyenChucNang('${item.id}', '${item.targetPanel}')">
+                    <span class="nav-icon">${item.icon}</span>
+                    <span class="nav-text">${item.title}</span>
+                </a>
+            `;
+            desktopList.appendChild(desktopLi);
+
+            // Render Mobile Drawer Item
+            const mobileLi = document.createElement("li");
+            mobileLi.className = "drawer-item" + (isActive ? " active" : "");
+            mobileLi.id = "mobile_" + item.id;
+            mobileLi.innerHTML = `
+                <a href="javascript:void(0)" class="drawer-link" onclick="chuyenChucNang('${item.id}', '${item.targetPanel}'); closeMenu();">
+                    <span class="drawer-icon">${item.icon}</span>
+                    <span class="drawer-text">${item.title}</span>
+                </a>
+            `;
+            mobileList.appendChild(mobileLi);
+        });
+
+        // Hiển thị panel tương ứng với mục đầu tiên được cấp quyền
+        if (accessibleItems.length > 0) {
+            hienThiPanel(accessibleItems[0].targetPanel);
+        }
+    }
+
+    // Chuyển đổi giữa các chức năng trên giao diện
+    function chuyenChucNang(menuId, panelId) {
+        document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".drawer-item").forEach(el => el.classList.remove("active"));
+
+        const activeDesktop = document.getElementById("desktop_" + menuId);
+        if (activeDesktop) activeDesktop.classList.add("active");
+
+        const activeMobile = document.getElementById("mobile_" + menuId);
+        if (activeMobile) activeMobile.classList.add("active");
+
+        hienThiPanel(panelId);
+    }
+
+    function hienThiPanel(panelId) {
+        document.querySelectorAll(".panel-section").forEach(p => p.classList.remove("active"));
+        const target = document.getElementById(panelId);
+        if (target) {
+            target.classList.add("active");
+        }
+    }
+
+    // Xử lý đóng mở Menu trên thiết bị di động
+    function toggleMenu() {
+        const drawer = document.getElementById("mobileDrawer");
+        const backdrop = document.getElementById("drawerBackdrop");
+        const isOpen = drawer.classList.contains("open");
+        if (isOpen) {
+            closeMenu();
+        } else {
+            drawer.classList.add("open");
+            backdrop.classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+    }
+
+    function closeMenu() {
+        const drawer = document.getElementById("mobileDrawer");
+        const backdrop = document.getElementById("drawerBackdrop");
+        if (drawer) drawer.classList.remove("open");
+        if (backdrop) backdrop.classList.remove("active");
+        document.body.style.overflow = "";
+    }
+
+    // Khởi tạo giao diện khi trang tải xong
+    const statusBar = document.getElementById("statusBar");
+    const statusText = document.getElementById("statusText");
+    const noiDungNhap = document.getElementById("noiDungNhap");
+    const draftStatus = document.getElementById("draftStatus");
+
+    window.onload = function() {
+        capNhatThongTinNguoiDung(currentUser);
+        renderMenuTheoQuyen(currentUser);
+
+        const savedDraft = localStorage.getItem("diem_danh_draft");
+        if (savedDraft && noiDungNhap) {
+            noiDungNhap.value = savedDraft;
+        }
+
+        if (!localStorage.getItem("sessionExpiresAt")) {
+            setSessionExpiry();
+        }
+    };
+
+    function refreshSessionActivity() {
+        if (localStorage.getItem("isLoggedIn") === "true") {
+            setSessionExpiry();
+        }
+    }
+
+    document.addEventListener("mousemove", refreshSessionActivity, { passive: true });
+    document.addEventListener("keydown", refreshSessionActivity);
+    document.addEventListener("click", refreshSessionActivity);
+    document.addEventListener("scroll", refreshSessionActivity, { passive: true });
+
+    if (noiDungNhap) {
+        noiDungNhap.addEventListener("input", function() {
+            localStorage.setItem("diem_danh_draft", noiDungNhap.value);
+            draftStatus.innerText = "💾 Đang lưu tự động...";
+            setTimeout(() => {
+                draftStatus.innerText = "💾 Dữ liệu đã được lưu bản nháp an toàn";
+            }, 500);
+        });
+    }
+
+    const sessionTimer = setInterval(() => {
+        const remainingMs = getRemainingMs();
+
+        if (remainingMs <= 0) {
+            clearInterval(sessionTimer);
+            expireSession();
+            return;
+        }
+
+        const remainingText = formatRemainingTime(remainingMs);
+
+        if (remainingMs <= 10 * 1000) {
+            statusBar.classList.add("danger");
+            statusText.innerHTML = `⚠️ <strong>Cảnh báo:</strong> Phiên sắp hết hạn sau <strong>${remainingText}</strong>!`;
+        } else {
+            statusText.innerHTML = `⏳ Phiên đăng nhập còn hiệu lực: <strong>${remainingText}</strong>`;
+            statusBar.classList.remove("danger");
+        }
+    }, 1000);
+
+    function giaHanPhien() {
+        setSessionExpiry();
+        statusBar.classList.remove("danger");
+        statusText.innerHTML = "✅ Phiên đã được gia hạn thành công!";
+        setTimeout(() => {
+            statusText.innerHTML = `⏳ Phiên đăng nhập còn hiệu lực: <strong>${formatRemainingTime(getRemainingMs())}</strong>`;
+        }, 1500);
+    }
+
+    function dangXuatAnToan() {
+        if (confirm("Bạn có chắc chắn muốn đăng xuất an toàn không?")) {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("sessionExpiresAt");
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("diem_danh_draft");
+            window.location.href = "login.html";
+        }
+    }
+
+    function diemDanhThanhCong() {
+        alert("Điểm danh thành công!");
+        localStorage.removeItem("diem_danh_draft");
+    }
+
+    // Xử lý đổi mật khẩu tích hợp từ S1-04
+    let currentPasswordDemo = "123456";
+
+    function xuLyDoiMatKhau(e) {
+        e.preventDefault();
+        const currentPass = document.getElementById("pCurrentPassword").value;
+        const newPass = document.getElementById("pNewPassword").value;
+        const confirmPass = document.getElementById("pConfirmPassword").value;
+        const msgBox = document.getElementById("pPasswordMessage");
+
+        if (currentPass !== currentPasswordDemo) {
+            msgBox.textContent = "Mật khẩu hiện tại không chính xác!";
+            msgBox.className = "msg-box error";
+            return;
+        }
+
+        const regex = /^(?=.*\p{L})(?=.*\p{N}).{8,}$/u;
+        if (!regex.test(newPass)) {
+            msgBox.textContent = "Mật khẩu mới phải có tối thiểu 8 ký tự, bao gồm cả chữ và số!";
+            msgBox.className = "msg-box error";
+            return;
+        }
+
+        if (newPass === currentPass) {
+            msgBox.textContent = "Mật khẩu mới phải khác mật khẩu hiện tại!";
+            msgBox.className = "msg-box error";
+            return;
+        }
+
+        if (newPass !== confirmPass) {
+            msgBox.textContent = "Mật khẩu xác nhận không khớp!";
+            msgBox.className = "msg-box error";
+            return;
+        }
+
+        currentPasswordDemo = newPass;
+        document.getElementById("panelPasswordForm").reset();
+        msgBox.textContent = "Đổi mật khẩu thành công!";
+        msgBox.className = "msg-box success";
+    }
+</script>
+
+</body>
+</html>
