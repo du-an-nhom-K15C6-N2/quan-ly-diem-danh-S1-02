@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập - Hệ Thống Điểm Danh</title>
     <style>
         :root {
@@ -29,7 +30,8 @@
             align-items: center;
             background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding: 16px;
         }
 
         body::before,
@@ -270,7 +272,7 @@
             color: #334155;
             font-size: 12px;
             font-weight: 600;
-            padding: 6px 10px;
+            padding: 11px 12px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -305,6 +307,21 @@
             .btn-role-tag {
                 width: 100%;
                 text-align: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 20px 14px 16px;
+                border-radius: 16px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .demo-label {
+                font-size: 12px;
             }
         }
     </style>
