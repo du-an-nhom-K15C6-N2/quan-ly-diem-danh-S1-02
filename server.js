@@ -71,6 +71,22 @@ app.post('/api/reset-password', async (req, res) => {
     return res.json({ success: true, message: 'Đặt lại mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.' });
 });
 
+app.post('/api/check-permission', (req, res) => {
+    const { permission } = req.body;
+    if (!permission || typeof permission !== 'string') {
+        return res.status(400).json({ success: false, code: 400, message: 'Thiếu thông tin quyền truy cập.' });
+    }
+    return res.status(403).json({ success: false, code: 403, message: 'Không đủ quyền truy cập.' });
+});
+
+app.use((req, res, next) => {
+    const accept = req.headers['accept'] || '';
+    if (accept.includes('application/json')) {
+        return res.status(404).json({ success: false, code: 404, message: 'Không tìm thấy tài nguyên yêu cầu.' });
+    }
+    res.status(404).sendFile(path.join(__dirname, '404.html'));
+});
+
 app.listen(3000, () => {
     console.log('Server Backend đang chạy tại http://localhost:3000');
 });

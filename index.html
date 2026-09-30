@@ -1327,6 +1327,8 @@
         // Hiển thị panel tương ứng với mục đầu tiên được cấp quyền
         if (accessibleItems.length > 0) {
             hienThiPanel(accessibleItems[0].targetPanel);
+        } else {
+            window.location.href = "403.html";
         }
     }
 
