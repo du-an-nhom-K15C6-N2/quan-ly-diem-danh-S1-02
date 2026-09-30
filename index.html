@@ -661,27 +661,17 @@
                 font-size: 11px;
             }
 
-            .user-name {
-                font-size: 12px;
-                max-width: 100px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .user-role-chip {
-                font-size: 10px;
-                padding: 1px 6px;
+            .user-details {
+                display: none;
             }
 
             .btn-logout {
-                padding: 8px 12px;
-                font-size: 12px;
-                border-radius: 8px;
+                display: none;
             }
 
             .container {
-                margin: 16px 10px;
+                margin: 16px auto;
+                width: calc(100% - 24px);
                 border-radius: 16px;
             }
 
@@ -691,7 +681,8 @@
 
             .session-status-bar {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
+                text-align: center;
                 gap: 10px;
                 padding: 12px 16px;
                 font-size: 13px;
@@ -728,20 +719,14 @@
                 font-size: 14px;
             }
 
-            .user-name {
-                max-width: 75px;
-            }
-
-            .user-role-chip {
-                display: none;
-            }
 
             .content {
                 padding: 16px 12px;
             }
 
             .container {
-                margin: 12px 8px;
+                margin: 12px auto;
+                width: calc(100% - 16px);
             }
 
             .session-status-bar {
@@ -756,10 +741,10 @@
     <header class="navbar">
         <div class="nav-left">
             <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleMenu()" aria-label="Mở menu điều hướng">
-                ☰
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
             <div class="brand-title">
-                <h2>🎓 Quản Lý Điểm Danh</h2>
+                <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Quản Lý Điểm Danh</h2>
             </div>
         </div>
         <div class="user-panel">
@@ -794,14 +779,14 @@
                     <span class="drawer-role-chip" id="drawerUserRole">Sinh viên</span>
                 </div>
             </div>
-            <button class="drawer-close" onclick="closeMenu()" aria-label="Đóng menu">✕</button>
+            <button class="drawer-close" onclick="closeMenu()" aria-label="Đóng menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
         <div class="drawer-section-title">DANH MỤC CHỨC NĂNG</div>
         <ul class="drawer-list" id="mobileMenuList">
             <!-- Danh sách menu mobile sẽ được render tự động theo quyền -->
         </ul>
         <div class="drawer-footer">
-            <button class="btn-drawer-logout" onclick="dangXuatAnToan()">🚪 Đăng xuất an toàn</button>
+            <button class="btn-drawer-logout" onclick="dangXuatAnToan()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Đăng xuất an toàn</button>
         </div>
     </aside>
 
@@ -809,7 +794,7 @@
     <main class="container">
         <!-- Thanh trạng thái phiên đăng nhập (Đáp ứng tiêu chí EP-01) -->
         <div id="statusBar" class="session-status-bar">
-            <span id="statusText">⏳ Phiên đăng nhập còn hiệu lực: <strong>30s</strong></span>
+            <span id="statusText"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Phiên đăng nhập còn hiệu lực: <strong>30s</strong></span>
             <button class="btn-renew" onclick="giaHanPhien()">Gia hạn phiên</button>
         </div>
 
@@ -835,7 +820,7 @@
                 </div>
 
                 <div class="action-row">
-                    <span id="draftStatus" class="draft-notice">💾 Dữ liệu đã được lưu bản nháp an toàn</span>
+                    <span id="draftStatus" class="draft-notice"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Dữ liệu đã được lưu bản nháp an toàn</span>
                     <button class="btn-submit" onclick="diemDanhThanhCong()">Gửi Điểm Danh</button>
                 </div>
             </section>
@@ -972,8 +957,8 @@
                 <p class="subtitle">Thống kê tỉ lệ đi học và danh sách sinh viên cảnh báo vắng</p>
 
                 <div class="data-card">
-                    <div style="margin-bottom: 8px;">📊 <strong>Tỉ lệ đi học trung bình toàn khóa:</strong> 94.2%</div>
-                    <div>⚠️ <strong>Sinh viên có nguy cơ cấm thi (>20% vắng):</strong> 1 sinh viên</div>
+                    <div style="margin-bottom: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> <strong>Tỉ lệ đi học trung bình toàn khóa:</strong> 94.2%</div>
+                    <div><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> <strong>Sinh viên có nguy cơ cấm thi (>20% vắng):</strong> 1 sinh viên</div>
                 </div>
 
                 <div class="data-table-wrapper">
@@ -1082,9 +1067,9 @@
                 <p class="subtitle">Chỉ số hoạt động chuyên cần và sử dụng hệ thống</p>
 
                 <div class="data-card">
-                    <p style="margin-bottom: 6px;">📈 <strong>Tổng số lượt điểm danh thành công hôm nay:</strong> 1,280 lượt</p>
-                    <p style="margin-bottom: 6px;">💻 <strong>Số phiên đăng nhập an toàn đang hoạt động:</strong> 85 phiên</p>
-                    <p>🛡️ <strong>Tỉ lệ phiên được bảo vệ thành công:</strong> 100%</p>
+                    <p style="margin-bottom: 6px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg> <strong>Tổng số lượt điểm danh thành công hôm nay:</strong> 1,280 lượt</p>
+                    <p style="margin-bottom: 6px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> <strong>Số phiên đăng nhập an toàn đang hoạt động:</strong> 85 phiên</p>
+                    <p><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> <strong>Tỉ lệ phiên được bảo vệ thành công:</strong> 100%</p>
                 </div>
             </section>
 
@@ -1139,70 +1124,70 @@
             id: "menu_diem_danh",
             permission: "diem_danh",
             title: "Điểm danh lớp học",
-            icon: "✍️",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>',
             targetPanel: "panel_diem_danh"
         },
         {
             id: "menu_lich_su",
             permission: "lich_su_diem_danh",
             title: "Lịch sử điểm danh",
-            icon: "📋",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
             targetPanel: "panel_lich_su"
         },
         {
             id: "menu_quan_ly_diem_danh",
             permission: "quan_ly_diem_danh",
             title: "Quản lý điểm danh",
-            icon: "👨‍🏫",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
             targetPanel: "panel_quan_ly_diem_danh"
         },
         {
             id: "menu_danh_sach_lop",
             permission: "danh_sach_lop",
             title: "Danh sách lớp học",
-            icon: "📚",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
             targetPanel: "panel_danh_sach_lop"
         },
         {
             id: "menu_bao_cao_chuyen_can",
             permission: "bao_cao_chuyen_can",
             title: "Báo cáo chuyên cần",
-            icon: "📊",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
             targetPanel: "panel_bao_cao_chuyen_can"
         },
         {
             id: "menu_quan_ly_nguoi_dung",
             permission: "quan_ly_nguoi_dung",
             title: "Quản lý người dùng",
-            icon: "👥",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
             targetPanel: "panel_quan_ly_nguoi_dung"
         },
         {
             id: "menu_quan_ly_lop_hoc",
             permission: "quan_ly_lop_hoc",
             title: "Quản lý môn & lớp",
-            icon: "🏫",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
             targetPanel: "panel_quan_ly_lop_hoc"
         },
         {
             id: "menu_bao_cao_tong_hop",
             permission: "bao_cao_tong_hop",
             title: "Báo cáo tổng hợp",
-            icon: "📈",
+            icon: "<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>",
             targetPanel: "panel_bao_cao_tong_hop"
         },
         {
             id: "menu_cau_hinh_he_thong",
             permission: "cau_hinh_he_thong",
             title: "Cấu hình hệ thống",
-            icon: "⚙️",
+            icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>',
             targetPanel: "panel_cau_hinh_he_thong"
         },
         {
             id: "menu_doi_mat_khau",
             permission: "doi_mat_khau",
             title: "Đổi mật khẩu",
-            icon: "🔑",
+            icon: '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>',
             targetPanel: "panel_doi_mat_khau"
         }
     ];
@@ -1415,9 +1400,9 @@
     if (noiDungNhap) {
         noiDungNhap.addEventListener("input", function() {
             localStorage.setItem("diem_danh_draft", noiDungNhap.value);
-            draftStatus.innerText = "💾 Đang lưu tự động...";
+            draftStatus.innerHTML = "<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Đang lưu tự động...";
             setTimeout(() => {
-                draftStatus.innerText = "💾 Dữ liệu đã được lưu bản nháp an toàn";
+                draftStatus.innerHTML = "<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Dữ liệu đã được lưu bản nháp an toàn";
             }, 500);
         });
     }
@@ -1435,9 +1420,9 @@
 
         if (remainingMs <= 10 * 1000) {
             statusBar.classList.add("danger");
-            statusText.innerHTML = `⚠️ <strong>Cảnh báo:</strong> Phiên sắp hết hạn sau <strong>${remainingText}</strong>!`;
+            statusText.innerHTML = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> <strong>Cảnh báo:</strong> Phiên sắp hết hạn sau <strong>${remainingText}</strong>!`;
         } else {
-            statusText.innerHTML = `⏳ Phiên đăng nhập còn hiệu lực: <strong>${remainingText}</strong>`;
+            statusText.innerHTML = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Phiên đăng nhập còn hiệu lực: <strong>${remainingText}</strong>`;
             statusBar.classList.remove("danger");
         }
     }, 1000);
@@ -1445,9 +1430,9 @@
     function giaHanPhien() {
         setSessionExpiry();
         statusBar.classList.remove("danger");
-        statusText.innerHTML = "✅ Phiên đã được gia hạn thành công!";
+        statusText.innerHTML = "<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Phiên đã được gia hạn thành công!";
         setTimeout(() => {
-            statusText.innerHTML = `⏳ Phiên đăng nhập còn hiệu lực: <strong>${formatRemainingTime(getRemainingMs())}</strong>`;
+            statusText.innerHTML = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Phiên đăng nhập còn hiệu lực: <strong>${formatRemainingTime(getRemainingMs())}</strong>`;
         }, 1500);
     }
 
