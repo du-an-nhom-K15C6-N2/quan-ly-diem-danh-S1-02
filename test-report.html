@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Report — Hệ Thống Điểm Danh S1-06</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            min-height: 100vh;
+            padding: 32px 16px;
+        }
+
+        .report-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .report-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            color: white;
+            border-radius: 18px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .report-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .report-header .subtitle {
+            font-size: 13px;
+            color: #93c5fd;
+        }
+
+        .report-meta {
+            text-align: right;
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .btn-run {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .btn-run:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .btn-run:disabled { background: #475569; cursor: not-allowed; transform: none; }
+
+        /* Summary bar */
+        .summary-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: white;
+            border-radius: 14px;
+            padding: 16px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid transparent;
+        }
+
+        .stat-card.total  { border-color: #e2e8f0; }
+        .stat-card.pass   { border-color: #bbf7d0; }
+        .stat-card.fail   { border-color: #fecaca; }
+
+        .stat-card .num {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-card.total .num { color: #334155; }
+        .stat-card.pass  .num { color: #16a34a; }
+        .stat-card.fail  .num { color: #dc2626; }
+
+        .stat-card .lbl {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Progress bar */
+        .progress-wrap {
+            background: white;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .progress-bar-bg {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            border-radius: 99px;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
+        /* Sections */
+        .section {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 99px;
+        }
+
+        .badge-pass { background: #dcfce7; color: #15803d; }
+        .badge-fail { background: #fee2e2; color: #b91c1c; }
+        .badge-pending { background: #e2e8f0; color: #64748b; }
+
+        .test-list {
+            padding: 8px 0;
+        }
+
+        .test-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 9px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s;
+        }
+
+        .test-row:last-child { border-bottom: none; }
+        .test-row:hover { background: #f8fafc; }
+
+        .test-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+
+        .test-icon.pass { background: #dcfce7; color: #16a34a; }
+        .test-icon.fail { background: #fee2e2; color: #dc2626; }
+        .test-icon.running { background: #dbeafe; color: #2563eb; animation: spin 1s linear infinite; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .test-label { flex: 1; color: #334155; line-height: 1.4; }
+        .test-label.fail { color: #991b1b; }
+
+        .test-status {
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .test-status.pass { color: #16a34a; }
+        .test-status.fail { color: #dc2626; }
+
+        /* Footer */
+        .report-footer {
+            background: white;
+            border-radius: 14px;
+            padding: 20px 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-top: 8px;
+        }
+
+        .report-footer h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .hint-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hint-list li {
+            font-size: 13px;
+            color: #475569;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .hint-list li::before {
+            content: '→';
+            color: #2563eb;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .idle-msg {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .result-final {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .result-final.all-pass {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .result-final.has-fail {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+<div class="report-wrap">
+
+    <!-- Header -->
+    <div class="report-header">
+        <div>
+            <h1>Test Report — Hệ Thống Điểm Danh</h1>
+            <div class="subtitle">S1-06 · Nhóm K15C6-N2 · http://localhost:3000</div>
+        </div>
+        <div class="report-meta">
+            <div id="runTimestamp">Chưa chạy</div>
+            <div id="runDuration"></div>
+            <button class="btn-run" id="btnRun" onclick="runAll()">▶ Chạy tất cả test</button>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-bar">
+        <div class="stat-card total"><div class="num" id="statTotal">—</div><div class="lbl">Tổng</div></div>
+        <div class="stat-card pass"> <div class="num" id="statPass">—</div> <div class="lbl">Pass</div></div>
+        <div class="stat-card fail"> <div class="num" id="statFail">—</div> <div class="lbl">Fail</div></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+        <div class="progress-label">
+            <span>Tiến độ</span>
+            <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Result banner (shown after run) -->
+    <div id="resultBanner" style="display:none"></div>
+
+    <!-- Test sections (rendered by JS) -->
+    <div id="sectionsContainer">
+        <div class="idle-msg">Nhấn <strong>▶ Chạy tất cả test</strong> để bắt đầu kiểm thử.</div>
+    </div>
+
+    <!-- Hints -->
+    <div class="report-footer">
+        <h4>Kiểm tra thủ công thêm</h4>
+        <ul class="hint-list">
+            <li>Đăng nhập tài khoản <strong>sinhvien</strong> → menu chỉ hiện: Điểm danh, Lịch sử, Đổi mật khẩu</li>
+            <li>Đăng nhập tài khoản <strong>giangvien</strong> → menu hiện: Quản lý điểm danh, Danh sách lớp, Báo cáo</li>
+            <li>Đăng nhập tài khoản <strong>admin</strong> → menu hiện: Quản lý người dùng, Cấu hình hệ thống...</li>
+            <li>Trên index.html: F12 > Application > LocalStorage > sửa <code>permissions: []</code> > F5 → phải ra 403.html</li>
+            <li>Truy cập <a href="/khong-ton-tai-xyz" target="_blank">http://localhost:3000/khong-ton-tai-xyz</a> → phải ra 404.html</li>
+            <li>Thu nhỏ trình duyệt xuống 360px → navbar chuyển sang menu drawer hamburger</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+const BASE = 'http://localhost:3000';
+
+let total = 0, passed = 0, failed = 0;
+let startTime = 0;
+
+// ─── Trạng thái sections ────────────────────────────────────────────
+const SECTIONS = [
+    { id: 'api',     title: 'Phần 1 — API Server',              icon: '⚙️', tests: [] },
+    { id: 'static',  title: 'Phần 2 — Static Files (HTML)',      icon: '📄', tests: [] },
+    { id: 'storage', title: 'Phần 3 — LocalStorage & Session',   icon: '💾', tests: [] },
+    { id: 'error',   title: 'Phần 4 — Trang lỗi 403 / 404',     icon: '🚫', tests: [] },
+];
+
+// ─── Helpers ────────────────────────────────────────────────────────
+async function api(method, path, body) {
+    try {
+        const res = await fetch(`${BASE}${path}`, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: body ? JSON.stringify(body) : undefined
+        });
+        const data = await res.json().catch(() => ({}));
+        return { status: res.status, data };
+    } catch { return { status: 0, data: {} }; }
+}
+
+async function fetchHTML(path) {
+    try {
+        const res = await fetch(`${BASE}${path}`, { headers: { Accept: 'text/html' } });
+        return { status: res.status, text: await res.text() };
+    } catch { return { status: 0, text: '' }; }
+}
+
+function setUser(user) {
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('sessionExpiresAt', String(Date.now() + 60000));
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
+
+function clearSession() {
+    ['isLoggedIn','sessionExpiresAt','currentUser','diem_danh_draft','logout_reason'].forEach(k => localStorage.removeItem(k));
+}
+
+// ─── Ghi nhận kết quả ───────────────────────────────────────────────
+function record(sectionId, label, pass) {
+    total++;
+    pass ? passed++ : failed++;
+    const sec = SECTIONS.find(s => s.id === sectionId);
+    if (sec) sec.tests.push({ label, pass });
+    updateStats();
+    renderSection(sectionId);
+}
+
+function updateStats() {
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statPass').textContent  = passed;
+    document.getElementById('statFail').textContent  = failed;
+    const pct = total > 0 ? Math.round((passed / total) * 100) : 0;
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ─── Render ─────────────────────────────────────────────────────────
+function renderAll() {
+    const container = document.getElementById('sectionsContainer');
+    container.innerHTML = SECTIONS.map(sec => `
+        <div class="section" id="section-${sec.id}">
+            <div class="section-header">
+                <h3>${sec.title}</h3>
+                <span class="section-badge badge-pending" id="badge-${sec.id}">Đang chạy...</span>
+            </div>
+            <div class="test-list" id="list-${sec.id}">
+                <div class="idle-msg" style="padding:20px">Chờ...</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderSection(sectionId) {
+    const sec = SECTIONS.find(s => s.id === sectionId);
+    if (!sec) return;
+
+    const secPass = sec.tests.filter(t => t.pass).length;
+    const secFail = sec.tests.filter(t => !t.pass).length;
+    const isDone  = sec.done;
+
+    const badge = document.getElementById(`badge-${sectionId}`);
+    if (isDone) {
+        badge.textContent = `${secPass}/${sec.tests.length} PASS`;
+        badge.className   = 'section-badge ' + (secFail > 0 ? 'badge-fail' : 'badge-pass');
+    }
+
+    const list = document.getElementById(`list-${sectionId}`);
+    list.innerHTML = sec.tests.map(t => `
+        <div class="test-row">
+            <div class="test-icon ${t.pass ? 'pass' : 'fail'}">${t.pass ? '✓' : '✗'}</div>
+            <div class="test-label ${t.pass ? '' : 'fail'}">${t.label}</div>
+            <div class="test-status ${t.pass ? 'pass' : 'fail'}">${t.pass ? 'PASS' : 'FAIL'}</div>
+        </div>
+    `).join('') || '<div class="idle-msg" style="padding:16px">Không có test</div>';
+}
+
+// ─── Test cases ─────────────────────────────────────────────────────
+async function testAPI() {
+    const s = 'api';
+
+    const h = await api('GET', '/api/health');
+    record(s, 'GET /api/health → 200 OK', h.status === 200);
+    record(s, 'GET /api/health → body.success = true', h.data.success === true);
+
+    const c1 = await api('POST', '/api/check-permission', { permission: 'quan_ly_nguoi_dung' });
+    record(s, 'POST /api/check-permission (hợp lệ) → 403 Forbidden', c1.status === 403);
+    record(s, 'POST /api/check-permission (hợp lệ) → code: 403', c1.data.code === 403);
+
+    const c2 = await api('POST', '/api/check-permission', {});
+    record(s, 'POST /api/check-permission (thiếu field) → 400 Bad Request', c2.status === 400);
+    record(s, 'POST /api/check-permission (thiếu field) → code: 400', c2.data.code === 400);
+
+    const fp = await api('POST', '/api/forgot-password', { email: 'test@example.com' });
+    record(s, 'POST /api/forgot-password → 200 OK', fp.status === 200);
+    record(s, 'POST /api/forgot-password → success: true', fp.data.success === true);
+
+    const rp1 = await api('POST', '/api/reset-password', { token: 'token_gia_mao_12345', password: 'MatKhauMoi123' });
+    record(s, 'POST /api/reset-password (token sai) → 400', rp1.status === 400);
+
+    const rp2 = await api('POST', '/api/reset-password', { token: 'bat_ky', password: '123' });
+    record(s, 'POST /api/reset-password (password < 8 ký tự) → 400', rp2.status === 400);
+
+    const n404 = await api('GET', '/duong-dan-sai-khong-ton-tai-xyz');
+    record(s, 'GET URL sai (Accept: JSON) → 404', n404.status === 404);
+    record(s, 'GET URL sai (Accept: JSON) → code: 404', n404.data.code === 404);
+    record(s, 'GET URL sai (Accept: JSON) → success: false', n404.data.success === false);
+
+    const fav = await fetchHTML('/favicon.ico');
+    record(s, 'GET /favicon.ico → 204 No Content (không lỗi)', fav.status === 204);
+
+    SECTIONS.find(sec => sec.id === s).done = true;
+    renderSection(s);
+}
+
+async function testStatic() {
+    const s = 'static';
+
+    const pages = [
+        { path: '/login.html',           must: 'xuLyDangNhap',     name: 'login.html' },
+        { path: '/index.html',           must: 'ALL_MENU_ITEMS',   name: 'index.html' },
+        { path: '/403.html',             must: '403',               name: '403.html' },
+        { path: '/404.html',             must: '404',               name: '404.html' },
+        { path: '/forgot-password.html', must: 'forgot-password',  name: 'forgot-password.html' },
+        { path: '/change-password.html', must: 'change-password',  name: 'change-password.html' },
+        { path: '/reset-password.html',  must: 'reset-password',   name: 'reset-password.html' },
+    ];
+
+    for (const p of pages) {
+        const res = await fetchHTML(p.path);
+        record(s, `${p.name} → tồn tại (200 OK)`, res.status === 200);
+        record(s, `${p.name} → nội dung hợp lệ`, res.text.includes(p.must));
+    }
+
+    SECTIONS.find(sec => sec.id === s).done = true;
+    renderSection(s);
+}
+
+function testStorage() {
+    const s = 'storage';
+
+    clearSession();
+    record(s, 'clearSession() → isLoggedIn bị xóa', localStorage.getItem('isLoggedIn') === null);
+    record(s, 'clearSession() → currentUser bị xóa', localStorage.getItem('currentUser') === null);
+    record(s, 'clearSession() → sessionExpiresAt bị xóa', localStorage.getItem('sessionExpiresAt') === null);
+
+    const sv = { username: 'sv_k2301', fullName: 'Nguyễn Văn An', role: 'student', roleName: 'Sinh viên', permissions: ['diem_danh', 'lich_su_diem_danh', 'doi_mat_khau'] };
+    setUser(sv);
+    record(s, 'setUser(SV) → isLoggedIn = "true"', localStorage.getItem('isLoggedIn') === 'true');
+    record(s, 'setUser(SV) → role = "student"', JSON.parse(localStorage.getItem('currentUser')).role === 'student');
+    record(s, 'setUser(SV) → phiên còn hiệu lực (expiresAt > now)', Number(localStorage.getItem('sessionExpiresAt')) > Date.now());
+    record(s, 'setUser(SV) → có quyền diem_danh', JSON.parse(localStorage.getItem('currentUser')).permissions.includes('diem_danh'));
+    record(s, 'setUser(SV) → KHÔNG có quyền quan_ly_nguoi_dung', !JSON.parse(localStorage.getItem('currentUser')).permissions.includes('quan_ly_nguoi_dung'));
+
+    setUser({ ...sv, role: 'lecturer', roleName: 'Giảng viên', permissions: ['quan_ly_diem_danh', 'danh_sach_lop', 'doi_mat_khau'] });
+    record(s, 'setUser(GV) → role = "lecturer"', JSON.parse(localStorage.getItem('currentUser')).role === 'lecturer');
+    record(s, 'setUser(GV) → có quyền quan_ly_diem_danh', JSON.parse(localStorage.getItem('currentUser')).permissions.includes('quan_ly_diem_danh'));
+    record(s, 'setUser(GV) → KHÔNG có quyền diem_danh', !JSON.parse(localStorage.getItem('currentUser')).permissions.includes('diem_danh'));
+
+    setUser({ username: 'admin', fullName: 'Admin', role: 'admin', roleName: 'Quản trị viên', permissions: ['quan_ly_nguoi_dung', 'cau_hinh_he_thong', 'doi_mat_khau'] });
+    record(s, 'setUser(Admin) → role = "admin"', JSON.parse(localStorage.getItem('currentUser')).role === 'admin');
+    record(s, 'setUser(Admin) → có quyền cau_hinh_he_thong', JSON.parse(localStorage.getItem('currentUser')).permissions.includes('cau_hinh_he_thong'));
+
+    // Lưu nháp
+    localStorage.setItem('diem_danh_draft', 'Nội dung test nháp 123');
+    record(s, 'localStorage lưu nháp điểm danh → đọc lại đúng', localStorage.getItem('diem_danh_draft') === 'Nội dung test nháp 123');
+    localStorage.removeItem('diem_danh_draft');
+
+    clearSession();
+
+    SECTIONS.find(sec => sec.id === s).done = true;
+    renderSection(s);
+}
+
+async function testErrorPages() {
+    const s = 'error';
+
+    const r403 = await fetchHTML('/403.html');
+    record(s, '403.html tồn tại và trả về 200 OK', r403.status === 200);
+    record(s, '403.html có nội dung mã lỗi 403', r403.text.includes('403'));
+    record(s, '403.html có nút về trang chủ (index.html)', r403.text.includes('index.html'));
+
+    const r404 = await fetchHTML('/404.html');
+    record(s, '404.html tồn tại và trả về 200 OK', r404.status === 200);
+    record(s, '404.html có nội dung mã lỗi 404', r404.text.includes('404'));
+    record(s, '404.html có nút về trang chủ (index.html)', r404.text.includes('index.html'));
+
+    const rMiss = await fetchHTML('/trang-khong-ton-tai-abc-xyz-999');
+    record(s, 'URL không tồn tại → server trả HTTP 404', rMiss.status === 404);
+    record(s, 'URL không tồn tại → server trả lại trang HTML (404.html)', rMiss.text.toLowerCase().includes('<!doctype html') || rMiss.text.includes('<html'));
+
+    SECTIONS.find(sec => sec.id === s).done = true;
+    renderSection(s);
+}
+
+// ─── Main runner ────────────────────────────────────────────────────
+async function runAll() {
+    const btn = document.getElementById('btnRun');
+    btn.disabled = true;
+    btn.textContent = '⏳ Đang chạy...';
+
+    total = 0; passed = 0; failed = 0; startTime = Date.now();
+    SECTIONS.forEach(s => { s.tests = []; s.done = false; });
+    document.getElementById('resultBanner').style.display = 'none';
+    updateStats();
+    renderAll();
+    document.getElementById('runTimestamp').textContent = new Date().toLocaleString('vi-VN');
+
+    await testAPI();
+    await testStatic();
+    testStorage();
+    await testErrorPages();
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+    document.getElementById('runDuration').textContent = `Hoàn tất trong ${elapsed}s`;
+
+    const banner = document.getElementById('resultBanner');
+    if (failed === 0) {
+        banner.className = 'result-final all-pass';
+        banner.textContent = `✓ Tất cả ${total}/${total} test đã PASS — Hệ thống hoạt động đúng!`;
+    } else {
+        banner.className = 'result-final has-fail';
+        banner.textContent = `✗ ${failed} test FAIL — ${passed}/${total} PASS. Kiểm tra lại các mục bôi đỏ bên dưới.`;
+    }
+    banner.style.display = 'block';
+
+    btn.disabled = false;
+    btn.textContent = '↺ Chạy lại';
+}
+</script>
+</body>
+</html>
