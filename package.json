@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "node test-s1-06.js",
+    "test:api": "node -e \"const s=require('child_process').spawn('node',['server.js'],{stdio:'ignore'});setTimeout(()=>{require('child_process').execSync('node test-api.js',{stdio:'inherit'});s.kill();},2000);\"",
+    "test:all": "npm test && npm run test:api",
     "start": "nodemon server.js"
   },
   "repository": {
