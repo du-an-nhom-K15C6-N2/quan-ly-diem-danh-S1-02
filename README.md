@@ -275,9 +275,36 @@ npm run test:all
 
 Chạy `npm test` (giao diện) → sau đó `npm run test:api` (API server) tuần tự.
 
+### 4. Kiểm thử trực tiếp trên trình duyệt (Chrome DevTools)
+
+Dành cho QA muốn test nhanh ngay trên giao diện, không cần cài thêm gì.
+
+**Bước 1 — Mở DevTools:**
+```
+F12 → chọn tab Console
+```
+
+**Bước 2 — Cho phép dán (nếu Chrome chặn):**
+```
+Gõ vào ô console:  allow pasting  rồi nhấn Enter
+```
+
+**Bước 3 — Dán toàn bộ nội dung file `test-console.js` vào console, nhấn Enter.**
+
+Script sẽ tự động chạy và hiển thị kết quả màu xanh/đỏ ngay trong console.
+
+**Phạm vi kiểm thử (test-console.js):**
+- API server: health, check-permission, forgot-password, reset-password, 404 JSON
+- Static files: tất cả 6 trang HTML tồn tại và có nội dung hợp lệ
+- localStorage: setUser, clearSession, kiểm tra phiên còn hiệu lực
+- DOM (khi mở index.html): phân quyền menu sinh viên / giảng viên / admin live
+- Trang lỗi: 403.html, 404.html nội dung đúng, URL sai trả về 404 HTML
+
+> Script thông minh — tự phát hiện đang ở trang nào (`login`, `index`, `403`, `404`) và bỏ qua test DOM nếu không phải `index.html`, tránh lỗi giả.
+
 ---
 
-## Git workflow
+
 
 - Nhánh phát triển: **`dev`**
 - Không commit trực tiếp vào `main` / `master`
