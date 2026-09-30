@@ -1173,7 +1173,7 @@
             id: "menu_bao_cao_tong_hop",
             permission: "bao_cao_tong_hop",
             title: "Báo cáo tổng hợp",
-            icon: "<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>",
+            icon: '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>',
             targetPanel: "panel_bao_cao_tong_hop"
         },
         {
@@ -1437,11 +1437,16 @@
     }
 
     function dangXuatAnToan() {
-        if (confirm("Bạn có chắc chắn muốn đăng xuất an toàn không?")) {
-            localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("sessionExpiresAt");
-            localStorage.removeItem("currentUser");
-            localStorage.removeItem("diem_danh_draft");
+        try {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất an toàn không?")) {
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("sessionExpiresAt");
+                localStorage.removeItem("currentUser");
+                localStorage.removeItem("diem_danh_draft");
+                window.location.href = "login.html";
+            }
+        } catch (error) {
+            console.error(error);
             window.location.href = "login.html";
         }
     }

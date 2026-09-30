@@ -13,6 +13,8 @@ app.get('/api/health', (req, res) => {
     res.status(200).json({ success: true, message: 'Backend đang chạy bình thường.' });
 });
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
@@ -54,29 +56,38 @@ app.post('/api/forgot-password', async (req, res) => {
 });
 
 app.post('/api/reset-password', async (req, res) => {
-    const { token, password } = req.body;
-    const resetRequest = resetTokens.get(token);
+    try {
+        const { token, password } = req.body;
+        const resetRequest = resetTokens.get(token);
 
-    if (!resetRequest || resetRequest.expiresAt < Date.now()) {
+        if (!resetRequest || resetRequest.expiresAt < Date.now()) {
+            resetTokens.delete(token);
+            return res.status(400).json({ success: false, message: 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.' });
+        }
+
+        if (typeof password !== 'string' || password.length < 8) {
+            return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 8 ký tự.' });
+        }
+
         resetTokens.delete(token);
-        return res.status(400).json({ success: false, message: 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.' });
+        return res.json({ success: true, message: 'Đặt lại mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Lỗi hệ thống server' });
     }
-
-    if (typeof password !== 'string' || password.length < 8) {
-        return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 8 ký tự.' });
-    }
-
-    // Demo hiện chưa có cơ sở dữ liệu tài khoản; token vẫn được dùng một lần.
-    resetTokens.delete(token);
-    return res.json({ success: true, message: 'Đặt lại mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.' });
 });
 
 app.post('/api/check-permission', (req, res) => {
-    const { permission } = req.body;
-    if (!permission || typeof permission !== 'string') {
-        return res.status(400).json({ success: false, code: 400, message: 'Thiếu thông tin quyền truy cập.' });
+    try {
+        const { permission } = req.body;
+        if (!permission || typeof permission !== 'string') {
+            return res.status(400).json({ success: false, code: 400, message: 'Thiếu thông tin quyền truy cập.' });
+        }
+        return res.status(403).json({ success: false, code: 403, message: 'Không đủ quyền truy cập.' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, code: 500, message: 'Lỗi hệ thống server' });
     }
-    return res.status(403).json({ success: false, code: 403, message: 'Không đủ quyền truy cập.' });
 });
 
 app.use((req, res, next) => {
